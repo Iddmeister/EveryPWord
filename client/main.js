@@ -1,9 +1,11 @@
 
-var textBoxEmpty = true
+var alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+var oldText = ""
 
 var submittedWords = {}
 
-var maxAttempts = 5
+var maxAttempts = 3
 
 var gameEnded = false
 
@@ -16,30 +18,31 @@ function playAnimation(object, anim) {
   })
 }
 
-function handleMouseClick(e) {
-
-  if (gameEnded) {
-    return
-  }
+// function handleMouseClick(e) {
 
 
-  e.target.blur()
-  if (e.target.matches("[data-key]")) {
-      addLetter(e.target.dataset.key.toUpperCase())
-      e.target.blur()
-      return
-  }
+//   if (gameEnded) {
+//     return
+//   }
 
-  if (e.target.matches("[data-enter]")) {
-      submitWord($("#textbox").text().toLowerCase())
-      return
-  }
 
-  if (e.target.matches("[data-delete]")) {
-      removeLetter()
-      return
-  }
-}
+//   e.target.blur()
+//   if (e.target.matches("[data-key]")) {
+//       addLetter(e.target.dataset.key.toUpperCase())
+//       e.target.blur()
+//       return
+//   }
+
+//   if (e.target.matches("[data-enter]")) {
+//       submitWord($("#textbox").val().toLowerCase())
+//       return
+//   }
+
+//   if (e.target.matches("[data-delete]")) {
+//       removeLetter()
+//       return
+//   }
+// }
 
 function physicalKeyPressed(event) {
 
@@ -49,20 +52,20 @@ function physicalKeyPressed(event) {
 
 
   if (event.key === "Enter") {
-      submitWord($("#textbox").text().toLowerCase())
+      submitWord($("#textbox").val().toLowerCase())
       return
     }
   
-    if (event.key === "Backspace" || event.key === "Delete") {
-      removeLetter()
-      return
-    }
+    // if (event.key === "Backspace" || event.key === "Delete") {
+    //   removeLetter()
+    //   return
+    // }
 
 
-  if (event.key.match(/^[a-z]$/) || event.key.match(/^[A-Z]$/)) {
-      addLetter(event.key.toUpperCase())
-      return
-    }
+  // if (event.key.match(/^[a-z]$/) || event.key.match(/^[A-Z]$/)) {
+  //     addLetter(event.key.toUpperCase())
+  //     return
+  //   }
 }
 
 function shakeTextbox() {
@@ -109,17 +112,69 @@ function submitWord(word) {
     $("#current-score").removeClass("add")
   })
 
-  $("#textbox").text("")
-  textBoxEmpty = true
-  displayTextboxEmpty(true)
+  $("#textbox").val("")
+  oldText = ""
 
   updateScoreAdd()
 
   submittedWords[word] = addWord(word, score)
 
+  $("#attempts").text(`${maxAttempts - Object.keys(submittedWords).length} remaining`)
+
   if (Object.keys(submittedWords).length >= maxAttempts) {
     endGame()
   }
+
+}
+
+function checkText(text) {
+
+  for (letter of text) {
+
+    if (!alphabet.includes(letter)) {
+      return false
+    }
+
+  }
+
+  return true
+
+}
+
+
+//This whole thing is dumb as fuck
+function textboxInput(e) {
+
+  let newText = e.originalEvent.data
+
+  let start = e.target.selectionStart
+  let end = e.target.selectionEnd
+
+
+  if (!newText) {
+
+    oldText = e.target.value
+    return
+
+  }
+
+  if (e.target.value[0].toLowerCase() != current_letter) {
+    shakeTextbox()
+    $("#textbox").val(oldText)
+  }
+
+   else if (!checkText(newText.toLowerCase())) {
+    shakeTextbox()
+    $("#textbox").val(oldText)
+  } else {
+
+    e.target.value = e.target.value.toUpperCase()
+    oldText = e.target.value
+
+  }
+
+  e.target.setSelectionRange(start, end);
+
 
 }
 
@@ -142,10 +197,10 @@ function updateScoreAdd() {
     
   }
 
-  let add = getWordScore($("#textbox").text().toLowerCase())
+  let add = getWordScore($("#textbox").val().toLowerCase())
 
   if (add) {
-    $("#score-add").text(`+${getWordScore($("#textbox").text().toLowerCase())}`)
+    $("#score-add").text(`+${getWordScore($("#textbox").val().toLowerCase())}`)
   } else {
     $("#score-add").text("")
   }
@@ -153,55 +208,6 @@ function updateScoreAdd() {
 
 }
 
-function addLetter(letter) {
-
-  if (textBoxEmpty) {
-    if (letter.toLowerCase() != current_letter) {
-      shakeTextbox()
-      return
-    }
-  }
-
-  let prevText = $("#textbox").text()
-
-  if (textBoxEmpty) {
-   displayTextboxEmpty(false)
-   textBoxEmpty = false
-   prevText = ""
-  }
-
-  $("#textbox").text(prevText+letter)
-
-  updateScoreAdd()
-
-
-}
-
-function removeLetter() {
-
-  if (textBoxEmpty) {
-    return
-  }
-
-  $("#textbox").text($("#textbox").text().slice(0, -1))
-
-  if ($("#textbox").text() == "") {
-    textBoxEmpty = true
-    displayTextboxEmpty(true)
-  } 
-
-  updateScoreAdd()
-
-}
-
-function displayTextboxEmpty(empty=true) {
-  if (empty) {
-    $("#textbox").text(current_letter.toUpperCase()+"..........")
-    $("#textbox").addClass("empty")
-  } else {
-    $("#textbox").removeClass("empty") 
-  }
-}
 
 function endGame() {
   gameEnded = true
@@ -209,14 +215,20 @@ function endGame() {
   $("#keyboard-container").hide()
   $("#game-over").addClass("show")
   $("#game-over").addClass("appear-bounce")
-
+  $("#attempts").hide()
 
 }
 
 $(()=> {
-    displayTextboxEmpty(true)
+
+    $("#attempts").text(`${maxAttempts} remaining`)
+
+    $("#textbox").attr("placeholder", current_letter.toUpperCase()+"..........")
+
     $(document).on("keydown", physicalKeyPressed)
-    $(document).on("click", handleMouseClick)
+    $("#textbox").on("input", textboxInput)
+    $("#textbox").on("paste", (e) => e.preventDefault())
+    // $(document).on("click", handleMouseClick)
 
   if (!showPredictedScore) {
     $("#score-add").hide()

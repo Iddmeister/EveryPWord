@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+
 *, *::after, *::before {
     box-sizing: border-box;
     font-family: Arial;
@@ -19,6 +21,30 @@ body {
   padding-bottom: 1em;
   align-content: center;
 }
+
+#top-bar {
+  margin-top: 10em;
+  /* width: 100%; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;  
+
+}
+
+#title {
+  font-size: 2em;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  font-size: 2em;
+  color: black;
+}
+
 
 #game {
   display: flex;
@@ -132,6 +158,31 @@ body {
   font-size: 0.8em;
 }
 
+#bottom-bar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.5em;
+
+}
+
+#info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: baseline;
+}
+
+#attempts {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  /* padding-right: 0.5em; */
+}
+
 #textbox {
 
   display: flex;
@@ -142,6 +193,7 @@ body {
   padding-right: 0.1em;
 
   font-size: 3em;
+
   border-bottom: 0.2em rgb(77, 77, 77) solid;
   background-color: rgba(0, 0, 0, 0.13);
 
@@ -180,9 +232,6 @@ body {
   }
 }
 
-#textbox.empty {
-  color: rgba(0, 0, 0, 0.336);
-}
 
 
 #game-over {
@@ -196,14 +245,27 @@ body {
   justify-content: center;
 }
 
+
 @media only screen and (max-width: 800px) {
 
   body {
     font-size: clamp(.5rem, 2.5vmin, 1rem);
   }
 
+  #top-bar {
+    margin-top: 10em;
+  }
+
+  .button {
+    font-size: 3em;
+  }
+
+  #title {
+    font-size: 2.5em  ;
+  }
+
   #game {
-    height: 99%;
+    /* height: 99%; */
     justify-content: space-between;
     width: 98%;
   }
@@ -214,4 +276,12 @@ body {
 
 }
 
+
+@media only screen and (max-height: 600px) {
+  
+  #top-bar {
+    margin-top: 0.5em;
+  }
+
+}
 
