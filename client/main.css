@@ -110,6 +110,45 @@ body {
   font-size: 0.8em;
   color: rgba(0, 0, 0, 0.733);
   font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  gap: 0.2em;
+
+}
+
+.penalty {
+  /* font-size: 0.8em; */
+  color: rgba(207, 47, 47, 0.733);
+  font-weight: 600;
+}
+
+#penalty-alert {
+  display: none;
+}
+
+#penalty-alert.show {
+  color: rgba(207, 47, 47, 0.733);;
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: show-penalty 200ms ease-out;
+}
+
+@keyframes show-penalty {
+
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 
 }
 
@@ -243,6 +282,20 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1em;
+}
+
+#practice-button {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 2em;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 0.3em;
+
 }
 
 
@@ -272,6 +325,10 @@ body {
 
   #not-keyboard {
   padding: 0.5em;
+  }
+
+  #game-over {
+    font-size: 1.5em;
   }
 
 }
