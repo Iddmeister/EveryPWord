@@ -18,7 +18,7 @@ var showPredictedScore = false
 
 var practice = false
 
-const debug = false
+const debug = true
 
 const offsetFromDate = new Date("7 June 2025")
 const msOffset = getTodaysDate() - offsetFromDate
@@ -456,10 +456,6 @@ function retrieveDailyState() {
 
 }
 
-//MAKE SURE
-
-//too save all words typed for hard mode - no cheating by checking score and refreshing in practice mode
-
 
 function resetGame() {
 
@@ -474,7 +470,7 @@ function resetGame() {
   $("#textbox").show()
   $("#game-over").hide()
   $("#game-over").removeClass("appear-bounce")
-  $("#attempts").text(`${maxAttempts} remaining`)
+  $("#attempts").text(`${maxAttempts - Object.keys(submittedWords).length} remaining`)
   $("#attempts").show()
 
 }
@@ -500,6 +496,33 @@ function endGame() {
   $("#info").hide()
 
 }
+
+function showPopup(popup) {
+
+  $(popup).addClass("show")
+  $(`${popup} > .popup`).addClass("show")
+
+}
+
+function hidePopup(popup) {
+
+  $(popup).removeClass("show")
+  $(`${popup} > .popup`).removeClass("show")
+
+}
+
+function openHelp() {
+  showPopup("#help-popup")
+}
+
+function closeHelp() {
+  hidePopup("#help-popup")
+}
+
+function openStats() {
+
+}
+
 
 
 var current_wordlist = current_letter+"_en_full.js"

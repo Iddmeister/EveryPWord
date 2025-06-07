@@ -23,13 +23,17 @@
 
 <body>
 
+    <div id="help-popup" class="panel" onclick="closeHelp()"><div class="popup"></div></div>
+
+    <div id="stats-popup" class="panel" onclick="closeStats()"><div class="popup"></div></div>
+
     <div id="top-bar">
 
-        <div class="button"></div>
+        <div id="stats" class="bi bi-bar-chart button" onclick="openStats()"></div>
 
         <h1 id="title">Every P Word</h1>
 
-        <div id="help" class="bi bi-question-circle button"></div>
+        <div id="help" class="bi bi-question-circle button" onclick="openHelp()"></div>
 
     </div>
 
