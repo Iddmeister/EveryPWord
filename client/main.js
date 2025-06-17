@@ -6,37 +6,40 @@ var oldText = ""
 var submittedWords = {}
 
 var discovered = []
+var discoveredToday = []
 
 var currentScore = 0
-var bestScore = 0
+var bestScore = null
 
 var maxAttempts = 3
 
 var gameEnded = false
 
+var statistics = null
+
 var showPredictedScore = false
 
 var practice = false
 
-const debug = true
+const debug = false
 
-const offsetFromDate = new Date("7 June 2025")
-const msOffset = getTodaysDate() - offsetFromDate
-const dayOffset = Math.floor(msOffset / 1000 / 60 / 60 / 24)
+const offsetFromDate = new Date("16 June 2025")
 
-var current_letter = (() => {
-  let i = dayOffset-(Math.floor(dayOffset/26)*26)
-  return alphabet[i]
-})()
-
-
+var current_letter = getLetterForDate(getTodaysDate())
 
 function getTodaysDate() {
   if (debug) {
-    return new Date("8 June 2025")
+    return new Date("18 July 2025")
   } else {
     return new Date()
   }
+}
+
+function getLetterForDate(date) {
+  let msOffset = date - offsetFromDate
+  let dayOffset = Math.floor(msOffset / 1000 / 60 / 60 / 24)
+  let i = dayOffset-(Math.floor(dayOffset/letter_order.length)*letter_order.length)
+  return letter_order[i]
 }
 
 
@@ -153,8 +156,13 @@ function submitWord(word) {
   }
 
   if (isWordDiscovered(word)) {
-    penalty += 10
+
+    if (!discoveredToday.includes(word)){
+      penalty += 10
+    }
+
   } else {
+    discoveredToday.push(word)
     addDiscoveredWord(word.toLowerCase())
   }
 
@@ -180,16 +188,13 @@ function submitWord(word) {
 
   if (Object.keys(submittedWords).length >= maxAttempts) {
 
-    if (!practice) {
-      saveDailyGame(currentScore)
-    } else {
-      savePracticeGame(currentScore)
-    }
-
     endGame()
+
+
   }
   
   saveDailyState()
+  
 
 }
 
@@ -260,7 +265,7 @@ function addWord(word, score, penalty=0) {
 
   let p = penalty !== 0 ? `<div class="penalty">+${penalty}</div>` : ""
 
-  let d = $(`<div class="submitted-word">${word.toUpperCase()}<div class="word-score">+${score}${p}</div></div>`)
+  let d = $(`<div class="submitted-word">${word.toUpperCase()}<div class="word-score">+${score} ${p}</div></div>`)
 
   $("#submitted").append(d)
 
@@ -418,6 +423,7 @@ function saveDailyState() {
   let state = {
     "completed": gameEnded,
     "words": Object.keys(submittedWords),
+    "discovered_today":discoveredToday,
     "date": getTodaysDate().toDateString(),
   }
 
@@ -446,6 +452,8 @@ function retrieveDailyState() {
 
     } else {
 
+      discoveredToday = state.discovered_today
+
       for (let word of state.words) {
         submitWord(word)
       }
@@ -456,6 +464,59 @@ function retrieveDailyState() {
 
 }
 
+function calculateStatistics() {
+
+  let stats = {
+    average: null,
+    best_all: null,
+    played: window.localStorage.getItem("games-played") ? JSON.parse(window.localStorage.getItem("games-played")) : 0,
+    daily: null,
+    best_today: bestScore == 0 ? null : bestScore,
+  }
+
+  let saveString = window.localStorage.getItem("days")
+
+  let days = {}
+
+  if (saveString) {
+
+    days = JSON.parse(saveString)
+
+  } else {
+    return stats
+  }
+
+  stats.daily = (days[getTodaysDate().toDateString()] ? days[getTodaysDate().toDateString()].daily : null)
+
+  let average = 0
+  let best = null
+
+  for (let day of Object.keys(days)) {
+
+    average += days[day].best
+    if (getLetterForDate(new Date(day)) == current_letter) {
+
+      if (!best) {
+        best = days[day].best
+      } else if (days[day].best < best) {
+        best = days[day].best
+      }
+    }
+
+  }
+
+  if (Object.keys(days).length > 0) {
+    average /= Object.keys(days).length
+    average = Math.round(average*100)/100
+    stats.average = (average == 0 ? null : average)
+    stats.best_all = best
+  }
+
+
+  return stats
+
+
+}
 
 function resetGame() {
 
@@ -472,6 +533,8 @@ function resetGame() {
   $("#game-over").removeClass("appear-bounce")
   $("#attempts").text(`${maxAttempts - Object.keys(submittedWords).length} remaining`)
   $("#attempts").show()
+  $("#end-highscore").text("")
+
 
 }
 
@@ -487,13 +550,71 @@ function startPracticeGame() {
 }
 
 function endGame() {
+
   gameEnded = true
   $("#textbox").hide()
+
+  if (!bestScore) {
+    $("#end-highscore").text("")
+  } else if (currentScore < bestScore) {
+    $("#end-highscore").text(`Previous Best: ${bestScore}`)
+  } else {
+    $("#end-highscore").text(`Best: ${bestScore}`)
+  }
+
+  if (currentScore == maxAttempts) {
+
+    $("#game-over-feedback").text("Perfect!")
+
+    if (practice) {
+      $("#game-over-message").text("You managed to achieve the lowest score possible!")
+    } else {
+      $("#game-over-message").text("You managed to achieve the lowest score possible! On you're first attempt! You're score has been saved")
+    }
+  } else {
+
+    if (practice) {
+      if (currentScore >= bestScore) {
+        $("#game-over-feedback").text("Nice Try")
+        $("#game-over-message").text("Keep playing to try and beat your score")
+      } else {
+        $("#game-over-feedback").text("Nice work, new best score!")
+        $("#game-over-message").text("Keep playing to try and get even lower")
+      }
+    } else {
+      $("#game-over-feedback").text("Nice Work!")
+      $("#game-over-message").text("Keep playing to try and beat your score")
+    }
+
+  }
+
+
   $("#game-over").addClass("show")
   $("#game-over").show()
   $("#game-over").addClass("appear-bounce")
   $("#attempts").hide()
   $("#info").hide()
+
+  let saveString = window.localStorage.getItem("games-played")
+
+  if (saveString) {
+    let played = JSON.parse(saveString)
+    played += 1
+    window.localStorage.setItem("games-played", JSON.stringify(played))
+  } else {
+    window.localStorage.setItem("games-played", JSON.stringify(1))
+  }
+
+  discoveredToday = []
+
+  if (!practice) {
+    saveDailyGame(currentScore)
+  } else {
+    savePracticeGame(currentScore)
+  }
+
+
+  updateStats()
 
 }
 
@@ -520,10 +641,37 @@ function closeHelp() {
 }
 
 function openStats() {
+  showPopup("#stats-popup")
 
 }
 
+function closeStats() {
+  hidePopup("#stats-popup")
 
+}
+
+function updateStats() {
+
+  let getStat = (stat) => {
+    return stats[stat] ? stats[stat] : "n/a"
+  }
+
+  $("#letter").text(`Scores for ${current_letter.toUpperCase()}`)
+
+  let stats = calculateStatistics()
+  
+  $("#daily-score").text(`First score today: ${getStat("daily")}`)
+  $("#best-score-today").text(`Best score today: ${getStat("best_today")}`)
+  $("#best-score-all").text(`Best score ever: ${getStat("best_all")}`)
+
+  $("#average-best-score").text(`Average best score: ${getStat("average")}`)
+  $("#total-games").text(`Total games played: ${getStat("played")}`)
+
+
+
+
+
+}
 
 var current_wordlist = current_letter+"_en_full.js"
 
@@ -536,10 +684,15 @@ script.onload = () => {
   retrieveSave()
   loadDiscoveredWords(current_letter)
   retrieveDailyState()
+  updateStats()
 }
 
 
 $(() => {
+
+  $("#letter-of-the-day").text(current_letter.toUpperCase())
+  $("#current-letter").text(`words beginning with ${current_letter.toUpperCase()}`)
+
 
   $("#attempts").text(`${maxAttempts} remaining`)
 

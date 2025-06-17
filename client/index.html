@@ -7,31 +7,82 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Every P Word</title>
+    <title>Highfalutin</title>
 
     <script src="jquery.js"></script>
     <!-- <script src="words.js"></script> -->
+    <script src="order.js" defer></script>
     <script src="main.js" defer></script>
     <!-- <script src="game.js" defer></script> -->
 
 
 
-    <link rel="stylesheet" href="keyboard.css">
+    <!-- <link rel="stylesheet" href="keyboard.css"> -->
     <link rel="stylesheet" href="main.css">
 </head>
 
 
 <body>
 
-    <div id="help-popup" class="panel" onclick="closeHelp()"><div class="popup"></div></div>
+    <div id="help-popup" class="panel"><div class="popup">
+        <div class="exit bi bi-x" onclick="closeHelp()"></div>
 
-    <div id="stats-popup" class="panel" onclick="closeStats()"><div class="popup"></div></div>
+        <div style="font-size: 2em"><strong>How To Play</strong></div>
+
+        <div id="explanation">
+            <div>Enter words beginning with the letter of the day, today's letter is <strong style="display: inline;" id="letter-of-the-day"></strong></div>
+            <div>You must enter <strong>3 words</strong>, entering words will add to your <strong>score</strong></div>
+            <div>Words are scored based on how <strong>common</strong> they are</div>
+            <div><strong>More</strong> common words give <strong style="color: rgb(216, 33, 33);">higher</strong> scores</div>
+            <div><strong>Less</strong> common words give <strong style="color: green;">lower</strong> scores, with the lowest being +1</div>
+            <div>Try to get the <strong>lowest</strong> score possible</div>
+            <div>Guess the weirdest and most uncommon words you can think of!</div>
+        </div>
+
+    </div></div>
+
+    <div id="stats-popup" class="panel"><div id="stats-container" class="popup">
+        <div class="exit bi bi-x" onclick="closeStats()"></div>
+
+        <h1 style="font-size: 1.4em;">Statistics</h1>
+
+        <div id="letter-scores">
+
+            <div id="letter">Scores for letter</div>
+            <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
+                <div id="daily-score">First score today:</div>
+                <div id="best-score-today">Best score today:</div>
+                <div id="best-score-all">Best score ever:</div>
+            </div>
+
+        </div>
+
+        <div id="general-scores">
+            <div id="general">General</div>
+            <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
+                <div id="average-best-score">Average best score:</div>
+                <div id="total-games">Total games played:</div>
+            </div>
+
+        </div>
+
+        <div id="score-chart">
+
+        </div>
+
+        <!-- <div id="stat-numbers"><div id="games-played">1 Played</div><div id="streak"><div id="fire-icon" class="bi bi-fire"></div><div id="streak-text"></div></div></div> -->
+
+
+    </div></div>
 
     <div id="top-bar">
 
         <div id="stats" class="bi bi-bar-chart button" onclick="openStats()"></div>
 
-        <h1 id="title">Every P Word</h1>
+        <div id="title">
+            <div id="main-title">Highfalutin</div>
+            <div id="current-letter">words beginning with B</div>
+        </div>
 
         <div id="help" class="bi bi-question-circle button" onclick="openHelp()"></div>
 
@@ -39,31 +90,31 @@
 
     <div id="game">
 
-        <div id="not-keyboard">
 
         <div id="score"><div id="current-score">0</div><div id="score-add"></div></div>
+        <div id="end-highscore"></div>
 
         <div id="submitted"></div>
 
         <!-- <div id="textbox">P</div> -->
 
         <input type="text" id="textbox" spellcheck="false" autocomplete="off" autofocus>
-        
-        
+                
         <div id="bottom-bar"><div id="info">Daily Attempt</div><div id="attempts"></div></div>
 
         <div id="penalty-alert">You have used this word before,<br>+10 penalty will be added</div>
         
         <div id="game-over">
-            <div style="font-size: 2em; font-weight: 800;">Nice Work!</div>
+            <div id="game-over-feedback" style="font-size: 2em; font-weight: 800;">Nice Work!</div>
 
-        <div style="display: flex; align-items: center; justify-content: center; text-align: center;">You're initial score for the day has been saved,<br> try and beat it!</div>
+        <div id="game-over-message" style="display: flex; align-items: center; justify-content: center; text-align: center;">You're initial score for the day has been saved,<br> try and beat it!</div>
 
-        <div id="practice-button" onclick="startPracticeGame()">Try Again</div>
+        <div id="practice-button" onclick="startPracticeGame()">Play Again</div>
+
+        <div id="spacer"></div>
 
         <div>
 
-        </div>
 
         </div>
 

@@ -33,7 +33,20 @@ body {
 }
 
 #title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+#main-title {
   font-size: 2em;
+  font-weight: 600;
+}
+
+#current-letter {
+  font-size: 1.3em;
 }
 
 .button {
@@ -49,7 +62,7 @@ body {
 #game {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  /* gap: 1em; */
   align-items: center;
   justify-content: center;
 
@@ -134,6 +147,7 @@ body {
   justify-content: center;
   text-align: center;
   animation: show-penalty 200ms ease-out;
+  margin-top: 1em;
 }
 
 @keyframes show-penalty {
@@ -152,12 +166,22 @@ body {
 
 }
 
+#end-highscore {
+  display: flex;
+  justify-content: center;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: rgb(54, 54, 54);
+  margin-bottom: 0.4em;
+}
+
 #score {
   display: flex;
   justify-content: center;
   font-size: 2em;
   font-weight: 600;
   gap: 0.1em;
+  margin-bottom: 0.1em;
 }
 
 #current-score {
@@ -222,6 +246,12 @@ body {
   /* padding-right: 0.5em; */
 }
 
+#spacer {
+  display: flex;
+  width: 20ch;
+  font-size: 3em;
+}
+
 #textbox {
 
   display: flex;
@@ -236,6 +266,8 @@ body {
   border-bottom: 0.2em rgb(77, 77, 77) solid;
   background-color: rgba(0, 0, 0, 0.13);
 
+  margin-top: 0.4em;
+  margin-bottom: 0.2em;
 
 }
 
@@ -283,6 +315,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1em;
+  margin-top: 2em;
 }
 
 #practice-button {
@@ -307,12 +340,15 @@ body {
   align-items: center;
   justify-content: center;
   /* display: none; */
+  /* pointer-events: visiblePainted; */
 }
 
 .panel.show {
   display: flex;
   animation: show-panel 100ms ease-out;
+
 }
+
 
 @keyframes show-panel {
   0% {
@@ -330,11 +366,16 @@ body {
   height: 70%;
   background-color: white;
   border: 5px solid grey;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  /* justify-content: center; */
 }
 .popup.show {
   display: flex;
   animation: show-popup 200ms ease-out;
 }
+
 
 @keyframes show-popup {
 
@@ -345,11 +386,106 @@ body {
   100% {
     transform: scale(1);
   }
+  
+}
+
+.exit {
+  color: black;
+  /* width: 2em;
+  height: 2em; */
+  font-size: 4em;
+  display: flex;
+  justify-self: flex-end;
+  align-self: flex-end;
+}
+
+#explanation {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  gap: 1em;
+  justify-content: center;
+  /* align-items: center; */
+  font-size: 1.2em;
+  height: auto;
+  flex-wrap: wrap;
+  text-align: justify;
+  /* text-align: center; */
+  margin-top: 1em;
+}
+
+#stats-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:flex-start;
+  gap: 0.5em;
+  font-size: 1.2em;
+}
+
+#letter-scores {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(233, 233, 233);
+  padding: 1em;
+  width: 60%;
+  gap: 0.1em;
 
 }
 
+#letter {
+  font-size: 1.4em;
+  margin-bottom: 0.4em;
+}
+
+#general-scores {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(233, 233, 233);
+  padding: 1em;
+  width: 60%;
+  gap: 0.1em;
+
+}
+
+#general {
+  font-size: 1.4em;
+  margin-bottom: 0.4em;
+}
+
+
+
+@media only screen and (max-height: 600px) {
+  
+  #top-bar {
+    margin-top: 0.5em;
+  }
+
+  /* #explanation {
+    font-size: 1em;
+  } */
+
+}
+
+@media only screen and (max-width: 500px) {
+  #explanation {
+    font-size: 1.5em;
+  }
+}
 
 @media only screen and (max-width: 800px) {
+
+
+  #spacer {
+    width: 0ch;
+  }
+
 
   body {
     font-size: clamp(.5rem, 2.5vmin, 1rem);
@@ -364,7 +500,7 @@ body {
   }
 
   #title {
-    font-size: 2.5em  ;
+    font-size: 1.2em;
   }
 
   #game {
@@ -381,14 +517,10 @@ body {
     font-size: 1.5em;
   }
 
-}
-
-
-@media only screen and (max-height: 600px) {
-  
-  #top-bar {
-    margin-top: 0.5em;
+  .popup {
+    width: 80%;
   }
 
 }
+
 
