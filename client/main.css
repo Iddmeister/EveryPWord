@@ -43,6 +43,31 @@ body {
 #main-title {
   font-size: 2em;
   font-weight: 600;
+
+
+}
+
+
+.rainbow {
+  font-weight: 600;
+  background: linear-gradient(to right, #de3030,  #e07a34,  #e2c337,  #9dbd3d,  #40d6cf,  #3d9dbd,  #ab567e, #db2b7d, #de3030);
+  /* background: linear-gradient(to right, #ff595e, #ffca3a, #8ac926, #1982c4, #6a4c93, #ff595e); */
+  background-clip: text;
+  color: transparent !important;
+  animation: rainbow 2s infinite linear;
+  background-size: 200% 100%;
+}
+
+@keyframes rainbow {
+  
+  0% {
+    background-position: 0 0;
+  }
+
+100% {
+    background-position: 200% 0;
+}
+
 }
 
 #current-letter {
@@ -140,7 +165,7 @@ body {
 }
 
 #penalty-alert.show {
-  color: rgba(207, 47, 47, 0.733);;
+  color: rgba(235, 36, 36, 0.733);;
   font-size: 2em;
   display: flex;
   align-items: center;
@@ -489,6 +514,10 @@ body {
 
   body {
     font-size: clamp(.5rem, 2.5vmin, 1rem);
+  }
+
+  .submitted-word {
+    font-size: 2.5em;
   }
 
   #top-bar {

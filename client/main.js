@@ -21,6 +21,8 @@ var showPredictedScore = false
 
 var practice = false
 
+const reusePenalty = 30
+
 const debug = false
 
 const offsetFromDate = new Date("16 June 2025")
@@ -158,7 +160,7 @@ function submitWord(word) {
   if (isWordDiscovered(word)) {
 
     if (!discoveredToday.includes(word)){
-      penalty += 10
+      penalty += reusePenalty
     }
 
   } else {
@@ -265,7 +267,17 @@ function addWord(word, score, penalty=0) {
 
   let p = penalty !== 0 ? `<div class="penalty">+${penalty}</div>` : ""
 
-  let d = $(`<div class="submitted-word">${word.toUpperCase()}<div class="word-score">+${score} ${p}</div></div>`)
+  let d = $(`<div class="submitted-word"><div class="word-text">${word.toUpperCase()}</div><div class="word-score">+${score} ${p}</div></div>`)
+
+  if (score+penalty <= 10) {
+
+    d.children().addClass("rainbow")
+
+  } else if (score+penalty <= 100) {
+
+    d.children().addClass("good")
+
+  }
 
   $("#submitted").append(d)
 
@@ -689,6 +701,8 @@ script.onload = () => {
 
 
 $(() => {
+
+  $("#penalty-alert").html(`You have used this word before,<br>+${reusePenalty} penalty will be added`)
 
   $("#letter-of-the-day").text(current_letter.toUpperCase())
   $("#current-letter").text(`words beginning with ${current_letter.toUpperCase()}`)
