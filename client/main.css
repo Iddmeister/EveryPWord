@@ -162,6 +162,7 @@ body {
 
 #penalty-alert {
   display: none;
+  font-weight: 600;
 }
 
 #penalty-alert.show {
