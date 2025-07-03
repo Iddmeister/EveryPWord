@@ -6,7 +6,7 @@ for l in alphabet:
     a_words[l] = {}
 
 
-with open("new_frequencies.txt", "r") as f:
+with open("merged.txt", "r") as f:
 
     print("\nOrdering words in memory")
 
@@ -18,10 +18,10 @@ with open("new_frequencies.txt", "r") as f:
 
 for l in a_words.keys():
 
-    with open("words/%s_en_full.js" % l, "w") as f:
+    with open("words2/%s_en_full.js" % l, "w") as f:
         f.write("")
 
-    with open("words/%s_en_full.js" % l, "a") as f:
+    with open("words2/%s_en_full.js" % l, "a") as f:
 
         f.write("//Frequency data for all words beginning with %s\n" % l)
         f.write("words = {\n")

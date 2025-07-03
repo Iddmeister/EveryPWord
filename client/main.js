@@ -29,6 +29,7 @@ const offsetFromDate = new Date("16 June 2025")
 
 var current_letter = getLetterForDate(getTodaysDate())
 
+
 function getTodaysDate() {
   if (debug) {
     return new Date("18 July 2025")
