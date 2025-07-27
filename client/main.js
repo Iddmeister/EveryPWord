@@ -700,8 +700,39 @@ script.onload = () => {
   updateStats()
 }
 
+function waveEffect(element) {
+
+  for (let n = 1; n < $(element).text().length+1; n++) {
+    console.log($(`${element} div:nth-child(${n})`))
+    $(`${element}:nth-child(${n})`).css("animation-delay", (n-1)*0.5 + "s")
+  }
+
+}
+
+function createWavyElement(text, delay) {
+
+  let container = $("<div></div>")
+
+  for (let n = 0; n < text.length; n++) {
+
+      container.append($(`<span style="animation-delay: ${n*delay}s">${text[n]}</span>`))
+
+  }
+
+  return container
+
+
+}
 
 $(() => {
+
+  let t = createWavyElement("nocabulary", 0.05)
+
+  t.attr("id", "main-title")
+
+  $("#title").prepend(t)
+
+  // waveEffect("#main-title")
 
   $("#penalty-alert").html(`You have used this word before,<br>+${reusePenalty} penalty will be added`)
 
