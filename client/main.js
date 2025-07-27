@@ -700,15 +700,6 @@ script.onload = () => {
   updateStats()
 }
 
-function waveEffect(element) {
-
-  for (let n = 1; n < $(element).text().length+1; n++) {
-    console.log($(`${element} div:nth-child(${n})`))
-    $(`${element}:nth-child(${n})`).css("animation-delay", (n-1)*0.5 + "s")
-  }
-
-}
-
 function createWavyElement(text, delay) {
 
   let container = $("<div></div>")

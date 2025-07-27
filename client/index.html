@@ -5,6 +5,17 @@
 
 <head>
 
+        <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JCH7E1Z723"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JCH7E1Z723');
+    </script>
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>nocabulary</title>
@@ -24,18 +35,44 @@
 
 <body>
 
+    <div id="top-bar">
+    
+        <div id="stats" class="bi bi-bar-chart button" onclick="openStats()"></div>
+
+        <div id="title">
+            <div id="current-letter">words beginning with B</div>
+        </div>
+
+        <div id="help" class="bi bi-question-circle button" onclick="openHelp()"></div>
+
+    </div>
+
+
     <div id="help-popup" class="panel"><div class="popup">
         <div class="exit bi bi-x" onclick="closeHelp()"></div>
 
         <div style="font-size: 2em"><strong>How To Play</strong></div>
 
         <div id="explanation">
-            <div>Enter words beginning with the letter of the day, today's letter is <strong style="display: inline;" id="letter-of-the-day"></strong></div>
-            <div>You must enter <strong>3 words</strong>, entering words will add to your <strong>score</strong></div>
+            <div style="font-size: 1.2em;">Scoring in nocabulary works like golf, the <strong style="color: green;">lower</strong> the better</div>
+
+            <div style="font-size: 1.1em;">Enter <strong>3 words</strong> beginning with the <strong>letter of the day</strong></div>
+            <!-- <div>Enter words beginning with the letter of the day, today's letter is <strong style="display: inline;" id="letter-of-the-day"></strong></div> -->
             <div>Words are scored based on how <strong>common</strong> they are</div>
-            <div><strong>More</strong> common words give <strong style="color: rgb(216, 33, 33);">higher</strong> scores</div>
-            <div><strong>Less</strong> common words give <strong style="color: green;">lower</strong> scores, with the lowest being +1</div>
-            <div>Try to get the <strong>lowest</strong> score possible</div>
+
+
+            <div style="font-size: 1.1em;"><strong>More</strong> common = <strong style="color: rgb(216, 33, 33);">higher</strong> score</div>
+            <div style="font-size: 1.1em;"><strong>Less</strong> common = <strong style="color: green;">lower</strong> score</div>
+
+            <div id="examples">
+                <div class="submitted-word"><div class="word-text">ANT</div><div class="word-score">+3888</div></div>
+                <div class="submitted-word"><div class="word-text">ABRASION</div><div class="word-score">+250</div></div>
+                <div class="submitted-word"><div class="word-text rainbow">???</div><div class="word-score rainbow">+1</div></div>
+            </div>
+
+
+
+            <!-- <div>The lowest score possible is <span style="font-size: 1.2em;" class="rainbow">+1</span></div> -->
             <div>Guess the weirdest and most uncommon words you can think of!</div>
         </div>
 
@@ -75,17 +112,6 @@
 
     </div></div>
 
-    <div id="top-bar">
-
-        <div id="stats" class="bi bi-bar-chart button" onclick="openStats()"></div>
-
-        <div id="title">
-            <div id="current-letter">words beginning with B</div>
-        </div>
-
-        <div id="help" class="bi bi-question-circle button" onclick="openHelp()"></div>
-
-    </div>
 
     <div id="game">
 

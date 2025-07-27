@@ -56,15 +56,14 @@ body {
 #main-title {
   font-size: 2em;
   font-weight: 600;
-
 }
 
 #main-title span {
+  /* position: relative; */
   display: inline-block;
   animation: wave 0.3s ease-in-out;
+
 }
-
-
 
 
 .rainbow {
@@ -316,6 +315,25 @@ body {
 
 }
 
+.fake-textbox {
+
+  display: flex;
+  width: 100%;
+  /* width: 5em; */
+  /* height: 3em; */
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+
+  font-size: 3em;
+
+  border-bottom: 0.2em rgb(77, 77, 77) solid;
+  background-color: rgba(0, 0, 0, 0.13);
+
+  margin-top: 0.4em;
+  margin-bottom: 0.2em;
+
+}
+
 .shake {
   color: rgb(255, 61, 27);
   animation: shake 250ms ease-in-out;
@@ -384,6 +402,7 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
+  transform: translateZ(1em);
   /* display: none; */
   /* pointer-events: visiblePainted; */
 }
@@ -454,9 +473,13 @@ body {
   font-size: 1.2em;
   height: auto;
   flex-wrap: wrap;
-  text-align: justify;
+  text-align: center;
   /* text-align: center; */
-  margin-top: 1em;
+  margin-top: 0.5em;
+}
+
+#examples {
+  font-size: 0.8em;
 }
 
 #stats-container {
@@ -526,6 +549,10 @@ body {
 
 @media only screen and (max-width: 800px) {
 
+
+  #examples {
+    font-size: 0.5em;
+  }
 
   #spacer {
     width: 0ch;
