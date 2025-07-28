@@ -184,8 +184,8 @@ function submitWord(word) {
       penalty += reusePenalty
     }
 
-  }
-   else {
+  } else {
+
     discoveredToday.push(word)
     addDiscoveredWord(word.toLowerCase())
 
@@ -661,19 +661,19 @@ function endGame() {
 
   discoveredToday = []
 
-  words = Object.keys(submittedWords)
+  let sWords = Object.keys(submittedWords)
 
-  penalties = []
+  let penalties = []
 
-  for (let word of words) {
+  for (let word of sWords) {
     penalties.push(submittedWords[word].data("penalty"))
   }
 
 
   if (!practice) {
-    saveDailyGame(currentScore, words, penalties)
+    saveDailyGame(currentScore, sWords, penalties)
   } else {
-    savePracticeGame(currentScore, words, penalties)
+    savePracticeGame(currentScore, sWords, penalties)
   }
 
 
