@@ -17,6 +17,8 @@
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+
 
     <title>nocabulary</title>
 
@@ -51,7 +53,7 @@
     <div id="help-popup" class="panel"><div class="popup">
         <div class="exit bi bi-x" onclick="closeHelp()"></div>
 
-        <div style="font-size: 2em"><strong>How To Play</strong></div>
+        <div style="font-size: 2em; padding-top: 2em;"><strong>How To Play</strong></div>
 
         <div id="explanation">
             <div style="font-size: 1.2em;">Scoring in nocabulary works like golf, the <strong style="color: green;">lower</strong> the better</div>
@@ -78,32 +80,35 @@
 
     </div></div>
 
-    <div id="stats-popup" class="panel"><div id="stats-container" class="popup">
-        <div class="exit bi bi-x" onclick="closeStats()"></div>
+    <div id="stats-popup" class="panel">
 
-        <h1 style="font-size: 1.4em;">Statistics</h1>
+        <div id="stats-container" class="popup">
 
-        <div id="letter-scores">
+            <div class="exit bi bi-x" onclick="closeStats()"></div>
 
-            <div id="letter">Scores for letter</div>
-            <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
-                <div id="daily-score">First score today:</div>
-                <div id="best-score-today">Best score today:</div>
-                <div id="best-score-all">Best score ever:</div>
+            <h1 style="font-size: 1.4em; padding-top: 2em;">Statistics</h1>
+
+            <div id="letter-scores" class="stat-box">
+
+                <div id="letter">Scores for letter</div>
+                <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
+                    <div id="daily-score">First score today:</div>
+                    <div id="best-score-today">Best score today:</div>
+                    <div id="best-score-all">Best score ever:</div>
+                </div>
+
             </div>
 
-        </div>
+            <div id="general-scores" class="stat-box">
+                <div id="general">General</div>
+                <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
+                    <div id="average-best-score">Average best score:</div>
+                    <div id="total-games">Total games played:</div>
+                </div>
 
-        <div id="general-scores">
-            <div id="general">General</div>
-            <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
-                <div id="average-best-score">Average best score:</div>
-                <div id="total-games">Total games played:</div>
             </div>
 
-        </div>
-
-        <div id="score-chart">
+            <div id="score-chart">
 
         </div>
 

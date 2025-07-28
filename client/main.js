@@ -22,6 +22,8 @@ var showPredictedScore = false
 var practice = false
 
 const reusePenalty = 30
+const pluralPenalty = 30
+
 
 const debug = false
 
@@ -130,6 +132,24 @@ function getWordScore(word) {
 
 }
 
+function checkPlurals(word) {
+
+
+  for (let w of Object.keys(submittedWords)) {
+
+    if (word === w+"s") {
+      return true
+    }
+    if (word+"s" === w) {
+      return true
+    }
+
+  }
+
+  return false
+
+}
+
 function submitWord(word) {
 
   if (gameEnded) {
@@ -164,9 +184,15 @@ function submitWord(word) {
       penalty += reusePenalty
     }
 
-  } else {
+  }
+   else {
     discoveredToday.push(word)
     addDiscoveredWord(word.toLowerCase())
+
+    if (checkPlurals(word)) {
+      penalty += pluralPenalty
+    }
+
   }
 
   currentScore += score + penalty
@@ -223,8 +249,17 @@ function textboxInput(e) {
   if (!Object.keys(submittedWords).includes($("#textbox").val().toLowerCase())) {
 
     if (isWordDiscovered($("#textbox").val().toLowerCase())) {
+
+      $("#penalty-alert").html(`You have used this word before<br>+${reusePenalty} penalty will be added`)
       $("#penalty-alert").addClass("show")
       $("#penalty-alert").show()
+
+    } else if(getWordScore($("#textbox").val().toLowerCase()) && checkPlurals($("#textbox").val().toLowerCase())) {
+
+      $("#penalty-alert").html(`This word is too similar<br>+${pluralPenalty} penalty will be added`)
+      $("#penalty-alert").addClass("show")
+      $("#penalty-alert").show()
+
     } else {
       $("#penalty-alert").hide()
     }
