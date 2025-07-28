@@ -305,6 +305,8 @@ function addWord(word, score, penalty=0) {
 
   let d = $(`<div class="submitted-word"><div class="word-text">${word.toUpperCase()}</div><div class="word-score">+${score} ${p}</div></div>`)
 
+  d.data("penalty", penalty)
+
   if (score+penalty <= 10) {
 
     d.children().addClass("rainbow")
@@ -417,7 +419,7 @@ function retrieveSave() {
 
 }
 
-function saveDailyGame(score) {
+function saveDailyGame(score, words=[], penalties=[]) {
 
   let saveString = window.localStorage.getItem("days")
 
@@ -432,6 +434,8 @@ function saveDailyGame(score) {
   days[getTodaysDate().toDateString()] = {
     "daily":score,
     "best":score,
+    "words":words,
+    "penalties":penalties,
   }
 
   bestScore = score
@@ -440,7 +444,7 @@ function saveDailyGame(score) {
 
 }
 
-function savePracticeGame(score) {
+function savePracticeGame(score, words=[], penalties=[]) {
 
   let saveString = window.localStorage.getItem("days")
 
@@ -457,6 +461,8 @@ function savePracticeGame(score) {
   if (score < today.best) {
     today.best = score
     bestScore = score
+    today.words = words
+    today.penalties = penalties
   }
 
   //Probably redundant but javascript could be fucking with me
@@ -655,10 +661,19 @@ function endGame() {
 
   discoveredToday = []
 
+  words = Object.keys(submittedWords)
+
+  penalties = []
+
+  for (let word of words) {
+    penalties.push(submittedWords[word].data("penalty"))
+  }
+
+
   if (!practice) {
-    saveDailyGame(currentScore)
+    saveDailyGame(currentScore, words, penalties)
   } else {
-    savePracticeGame(currentScore)
+    savePracticeGame(currentScore, words, penalties)
   }
 
 
