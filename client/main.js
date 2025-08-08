@@ -328,6 +328,36 @@ function addWord(word, score, penalty=0) {
 
 }
 
+
+function addWordStats(word, score, penalty=0) {
+
+  let p = penalty !== 0 ? `<div class="penalty">+${penalty}</div>` : ""
+
+  let d = $(`<div class="submitted-word"><div class="word-text">${word.toUpperCase()}</div><div class="word-score">+${score} ${p}</div></div>`)
+
+  d.data("penalty", penalty)
+
+  if (score+penalty <= 10) {
+
+    d.children().addClass("rainbow")
+
+  } else if (score+penalty <= 100) {
+
+    d.children().addClass("good")
+
+  }
+
+  $("#best-words").append(d)
+
+  playAnimation(d, "appear-bounce")
+
+  // d.data("word", word)
+
+  return d
+
+
+}
+
 function updateScoreAdd() {
 
   if (currentScore == 0) {
@@ -526,12 +556,13 @@ function calculateStatistics() {
     played: window.localStorage.getItem("games-played") ? JSON.parse(window.localStorage.getItem("games-played")) : 0,
     daily: null,
     best_today: bestScore == 0 ? null : bestScore,
+    best_words_today: [],
   }
 
   let saveString = window.localStorage.getItem("days")
 
   let days = {}
-
+ 
   if (saveString) {
 
     days = JSON.parse(saveString)
@@ -539,6 +570,22 @@ function calculateStatistics() {
   } else {
     return stats
   }
+
+  if (days[getTodaysDate().toDateString()]) {
+    let words = days[getTodaysDate().toDateString()].words
+    let penalties = days[getTodaysDate().toDateString()].penalties
+
+    if (words) {
+
+      for (let i = 0; i < words.length; i++) {
+        stats.best_words_today.push([words[i], penalties[i]])
+      }
+
+    }
+
+  }
+
+  stats.best_words_today
 
   stats.daily = (days[getTodaysDate().toDateString()] ? days[getTodaysDate().toDateString()].daily : null)
 
@@ -713,6 +760,97 @@ function closeStats() {
 
 }
 
+// Standard Normal variate using Box-Muller transform.
+function gaussianRandom(mean=0, stdev=1) {
+  const u = 1 - Math.random(); // Converting [0,1) to (0,1]
+  const v = Math.random();
+  const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+  // Transform to the desired mean and standard deviation:
+  return z * stdev + mean;
+}
+
+function calculateHistogram(scores, bins) {
+
+  let increment = 1.0
+  let finalBins = {}
+  let extra = 0
+
+  for (let bin of bins) {
+    finalBins[bin.value] = 0
+  }
+
+  for (let score of scores) {
+
+    for (let b = 0; b < bins.length; b++) {
+
+      let bin = bins[b]
+
+      if (score <= bin.value) {
+        //The 8 is the base unit of width for the frequency density (8 == 0.125 width)
+        finalBins[bin.value] += increment// / (bin.width*100)
+        break
+      } else if (b >= bins.length-1) {
+        extra += increment
+      }
+
+    }
+
+  }
+
+
+  for (let bin of Object.keys(finalBins)) {
+    finalBins[bin] = (finalBins[bin] / (scores.length-extra))
+  }
+
+  return finalBins
+
+}
+
+function createHistogram(bars, bins, ticks, score) {
+
+  let container = $(`<div class="histogram"></div>`)
+  let bar_container = $(`<div class="bar-container"></div>`)
+  let x_axis = $(`<div class="x-axis"></div>`)
+  let hScore = $(`<div id="hist-score"><div class="hist-score-text"><strong>YOU<br>${score*100}</strong></div></div>`)
+
+  hScore.css("width", `${score*100}%`)
+
+  bar_container.append(hScore)
+
+  container.append(bar_container)
+  container.append(x_axis)
+
+
+  for (let b = 0; b < bins.length; b++) {
+
+    let bin = bins[b].value
+
+    let bar = $(`<div class="hist-bar"><div class="hist-bar-inside"></div></div>`)
+    bar.css("height", `${bars[bin]*600}%`)
+    bar.css("width", `${bins[b].width*100}%`)
+
+    bar_container.append(bar)
+
+  }
+
+  let cumWidth = 0
+
+  for (let i = 0; i < ticks.length; i++) {
+    let point = $(`<div class="x-tick"><${ticks[i].display ? ticks[i].display : ticks[i].value}</div>`)
+
+    point.css("width", `${(ticks[i].x*100) - cumWidth}%`)
+
+    cumWidth = ticks[i].x*100
+
+    x_axis.append(point)
+  }
+
+
+
+  return container
+
+}
+
 function updateStats() {
 
   let getStat = (stat) => {
@@ -724,12 +862,133 @@ function updateStats() {
   let stats = calculateStatistics()
   
   $("#daily-score").text(`First score today: ${getStat("daily")}`)
-  $("#best-score-today").text(`Best score today: ${getStat("best_today")}`)
+  $("#best-score-today").text(`Today's Best: ${getStat("best_today")}`)
   $("#best-score-all").text(`Best score ever: ${getStat("best_all")}`)
 
   $("#average-best-score").text(`Average best score: ${getStat("average")}`)
   $("#total-games").text(`Total games played: ${getStat("played")}`)
 
+  $("#best-words").empty(".submitted-word")
+
+  for(let w of stats.best_words_today) {
+
+    addWordStats(w[0], getWordScore(w[0]), w[1])
+
+  }
+
+  $("#histogram-container").empty(".histogram")
+
+  // let globalInfo = []
+  // let ticks = []
+
+  // for (let i = 0; i < 50; i++) {
+
+  //   globalInfo.push({height:Math.random(), width:1/50})
+
+
+  // }
+
+  let data = []
+
+  for (let i = 0; i < 10000; i++) {
+    let d = Math.round(gaussianRandom(100000, 10000))
+    if (d < 3) {
+      continue
+    }
+    data.push(d)
+  }
+
+  for (let i = 0; i < 10000; i++) {
+    let d = Math.round(gaussianRandom(500, 200))
+    if (d < 3) {
+      continue
+    }
+    data.push(d)
+  }
+
+  for (let i = 0; i < 10000; i++) {
+    let d = Math.round(gaussianRandom(150, 75))
+    if (d < 3) {
+      continue
+    }
+    data.push(d)
+  }
+
+  for (let i = 0; i < 5000; i++) {
+    let d = Math.round(gaussianRandom(10, 15))
+    if (d < 3) {
+      continue
+    }
+    data.push(d)
+  }
+
+  // for (let i = 0; i < 100; i++) {
+  //   let d = Math.round(gaussianRandom(3, 0))
+  //   if (d < 3) {
+  //     continue
+  //   }
+  //   data.push(d)
+  // }
+
+
+  let ticks = [
+    {x:0.07, value:3},
+    {x:0.175, value:30},
+    {x:0.3, value:100},
+    {x:0.425, value:200},
+    {x:0.575, value:500},
+    {x:0.675, value:1000, display:"1K"},
+    {x:0.775, value:10000, display:"10K"},
+    {x:0.875, value:100000, display:"100K"},
+    {x:1, value:1000000, display:"1M"},
+
+  ]
+  
+  let bins = []
+
+  for (let t = 0; t < 50; t++) {
+
+    bins.push({value:t, width:0.01})
+
+  }
+
+  for (let t = 51; t < 100; t++) {
+
+    bins.push({value:t, width:0.01})
+
+  }
+
+  // for (let t = 200; t < 500; t++) {
+
+  //   bins.push({value:t, width:0.0025})
+
+  // }
+
+  // for (let t = 0; t < ticks.length; t++) {
+    
+  //   bins.push({value:ticks[t].value, width:undefined})
+
+  //   if (t == 0) {
+  //     bins[t].width = ticks[t].x
+  //   } else {
+  //     bins[t].width = ticks[t].x-ticks[t-1].x
+  //   }
+
+  // }
+
+  console.log(bins)
+
+  let globalInfo = calculateHistogram(data, bins)
+  console.log(globalInfo)
+
+  // for (let bin of bins) {
+
+  //   ticks.push({x:bin/100, value:bin})
+
+  // }
+
+
+  $("#histogram-container").append(createHistogram(globalInfo, bins, ticks, 0.2))
 
 
 

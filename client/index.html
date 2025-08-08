@@ -50,45 +50,55 @@
     </div>
 
 
-    <div id="help-popup" class="panel"><div class="popup">
-        <div class="exit bi bi-x" onclick="closeHelp()"></div>
+    <div id="help-popup" class="panel">
 
-        <div style="font-size: 2em; padding-top: 2em;"><strong>How To Play</strong></div>
+        <div class="popup">
+            <div class="exit bi bi-x" onclick="closeHelp()"></div>
 
-        <div id="explanation">
-            <div style="font-size: 1.2em;">Scoring in nocabulary works like golf, the <strong style="color: green;">lower</strong> the better</div>
+            <div style="font-size: 2em; padding-top: 2em;"><strong>How To Play</strong></div>
 
-            <div style="font-size: 1.1em;">Enter <strong>3 words</strong> beginning with the <strong>letter of the day</strong></div>
-            <!-- <div>Enter words beginning with the letter of the day, today's letter is <strong style="display: inline;" id="letter-of-the-day"></strong></div> -->
-            <div>Words are scored based on how <strong>common</strong> they are</div>
+            <div id="explanation">
+                <div style="font-size: 1.2em;">Scoring in nocabulary works like golf, the <strong style="color: green;">lower</strong> the better</div>
+
+                <div style="font-size: 1.1em;">Enter <strong>3 words</strong> beginning with the <strong>letter of the day</strong></div>
+                <!-- <div>Enter words beginning with the letter of the day, today's letter is <strong style="display: inline;" id="letter-of-the-day"></strong></div> -->
+                <div>Words are scored based on how <strong>common</strong> they are</div>
 
 
-            <div style="font-size: 1.1em;"><strong>More</strong> common = <strong style="color: rgb(216, 33, 33);">higher</strong> score</div>
-            <div style="font-size: 1.1em;"><strong>Less</strong> common = <strong style="color: green;">lower</strong> score</div>
+                <div style="font-size: 1.1em;"><strong>More</strong> common = <strong style="color: rgb(216, 33, 33);">higher</strong> score</div>
+                <div style="font-size: 1.1em;"><strong>Less</strong> common = <strong style="color: green;">lower</strong> score</div>
 
-            <div id="examples">
-                <div class="submitted-word"><div class="word-text">ANT</div><div class="word-score">+3888</div></div>
-                <div class="submitted-word"><div class="word-text">ABRASION</div><div class="word-score">+250</div></div>
-                <div class="submitted-word"><div class="word-text rainbow">???</div><div class="word-score rainbow">+1</div></div>
+                <div class="examples">
+                    <div class="submitted-word"><div class="word-text">ANT</div><div class="word-score">+3888</div></div>
+                    <div class="submitted-word"><div class="word-text">ABRASION</div><div class="word-score">+250</div></div>
+                    <div class="submitted-word"><div class="word-text rainbow">???</div><div class="word-score rainbow">+1</div></div>
+                </div>
+
+
+
+                <!-- <div>The lowest score possible is <span style="font-size: 1.2em;" class="rainbow">+1</span></div> -->
+                <div>Guess the weirdest and most uncommon words you can think of!</div>
+                
             </div>
 
-
-
-            <!-- <div>The lowest score possible is <span style="font-size: 1.2em;" class="rainbow">+1</span></div> -->
-            <div>Guess the weirdest and most uncommon words you can think of!</div>
         </div>
-
-    </div></div>
+    </div>
 
     <div id="stats-popup" class="panel">
 
         <div id="stats-container" class="popup">
-
             <div class="exit bi bi-x" onclick="closeStats()"></div>
 
-            <h1 style="font-size: 1.4em; padding-top: 2em;">Statistics</h1>
+            <div id="statistics">
 
-            <div id="letter-scores" class="stat-box">
+            <h1 style="font-size: 1.4em; padding-top: 2em; margin: 0;">Statistics</h1>
+            <div id="best-score-today" style="font-size: 1.2em;">Today's Best: ???</div>
+
+            <div id="best-words" class="examples"></div>
+
+            <div id="histogram-container"></div>
+
+            <!-- <div id="letter-scores" class="stat-box">
 
                 <div id="letter">Scores for letter</div>
                 <div style="display: flex; flex-direction: column; justify-content: flex-start; gap: 0.4em;">
@@ -106,9 +116,11 @@
                     <div id="total-games">Total games played:</div>
                 </div>
 
-            </div>
+            </div> -->
 
             <div id="score-chart">
+
+        </div>
 
         </div>
 
