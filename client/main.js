@@ -806,14 +806,57 @@ function calculateHistogram(scores, bins) {
 
 }
 
+function calculateScorePosition(score, bins) {
+
+  let cumWidth = 0
+  let finalBin = 0
+
+  for (let b = 0; b < bins.length; b++) {
+
+    let bin = bins[b]
+
+    if (score <= bin.value) {
+      finalBin = b
+      break
+    } else {
+      cumWidth += bin.width
+    }
+
+  }
+
+  if (finalBin > 0) {
+    return cumWidth + ((score-bins[finalBin-1].value)/(bins[finalBin].value-bins[finalBin-1].value)) * bins[finalBin].width
+  } else {
+    return cumWidth + ((score)/(bins[finalBin].value)) * bins[finalBin].width
+
+  }
+
+}
+
+function getMostFrequent(bars) {
+
+  let highest = 0
+
+  for (let bar of Object.values(bars)) {
+
+    if (bar > highest) {
+      highest = bar
+    }
+
+  }
+
+  return highest
+
+}
+
 function createHistogram(bars, bins, ticks, score) {
 
   let container = $(`<div class="histogram"></div>`)
   let bar_container = $(`<div class="bar-container"></div>`)
   let x_axis = $(`<div class="x-axis"></div>`)
-  let hScore = $(`<div id="hist-score"><div class="hist-score-text"><strong>YOU<br>${score*100}</strong></div></div>`)
+  let hScore = $(`<div id="hist-score"><div class="hist-score-text"><strong>YOU<br>${score}</strong></div></div>`)
 
-  hScore.css("width", `${score*100}%`)
+  hScore.css("width", `${calculateScorePosition(score, bins)*100}%`)
 
   bar_container.append(hScore)
 
@@ -826,7 +869,7 @@ function createHistogram(bars, bins, ticks, score) {
     let bin = bins[b].value
 
     let bar = $(`<div class="hist-bar"><div class="hist-bar-inside"></div></div>`)
-    bar.css("height", `${bars[bin]*600}%`)
+    bar.css("height", `${bars[bin] * 100 * (1/getMostFrequent(bars))}%`)
     bar.css("width", `${bins[b].width*100}%`)
 
     bar_container.append(bar)
@@ -836,7 +879,7 @@ function createHistogram(bars, bins, ticks, score) {
   let cumWidth = 0
 
   for (let i = 0; i < ticks.length; i++) {
-    let point = $(`<div class="x-tick"><${ticks[i].display ? ticks[i].display : ticks[i].value}</div>`)
+    let point = $(`<div class="x-tick">${ticks[i].display ? ticks[i].display : ticks[i].value}</div>`)
 
     point.css("width", `${(ticks[i].x*100) - cumWidth}%`)
 
@@ -890,73 +933,73 @@ function updateStats() {
 
   let data = []
 
-  for (let i = 0; i < 10000; i++) {
-    let d = Math.round(gaussianRandom(100000, 10000))
-    if (d < 3) {
-      continue
-    }
-    data.push(d)
-  }
-
-  for (let i = 0; i < 10000; i++) {
-    let d = Math.round(gaussianRandom(500, 200))
-    if (d < 3) {
-      continue
-    }
-    data.push(d)
-  }
-
-  for (let i = 0; i < 10000; i++) {
-    let d = Math.round(gaussianRandom(150, 75))
-    if (d < 3) {
-      continue
-    }
-    data.push(d)
-  }
-
-  for (let i = 0; i < 5000; i++) {
-    let d = Math.round(gaussianRandom(10, 15))
-    if (d < 3) {
-      continue
-    }
-    data.push(d)
-  }
-
-  // for (let i = 0; i < 100; i++) {
-  //   let d = Math.round(gaussianRandom(3, 0))
+  // for (let i = 0; i < 10000; i++) {
+  //   let d = Math.round(gaussianRandom(100000, 10000))
   //   if (d < 3) {
   //     continue
   //   }
   //   data.push(d)
   // }
 
+  // for (let i = 0; i < 10000; i++) {
+  //   let d = Math.round(gaussianRandom(500, 200))
+  //   if (d < 3) {
+  //     continue
+  //   }
+  //   data.push(d)
+  // }
+
+  // for (let i = 0; i < 10000; i++) {
+  //   let d = Math.round(gaussianRandom(150, 75))
+  //   if (d < 3) {
+  //     continue
+  //   }
+  //   data.push(d)
+  // }
+
+  // for (let i = 0; i < 5000; i++) {
+  //   let d = Math.round(gaussianRandom(10, 15))
+  //   if (d < 3) {
+  //     continue
+  //   }
+  //   data.push(d)
+  // }
+
+  for (let i = 0; i < 10000; i++) {
+    let d = Math.round(gaussianRandom(200, 100))
+    if (d < 3) {
+      continue
+    }
+    data.push(d)
+  }
+
 
   let ticks = [
-    {x:0.07, value:3},
-    {x:0.175, value:30},
-    {x:0.3, value:100},
-    {x:0.425, value:200},
-    {x:0.575, value:500},
-    {x:0.675, value:1000, display:"1K"},
-    {x:0.775, value:10000, display:"10K"},
-    {x:0.875, value:100000, display:"100K"},
-    {x:1, value:1000000, display:"1M"},
+    {x:0.07, value:3, display:"3"},
+    {x:0.175, value:30, display:"< 30"},
+    {x:0.3, value:100, display:"< 100"},
+    {x:0.425, value:250, display:"< 250"},
+    {x:0.575, value:500, display:"< 500"},
+    {x:0.675, value:1000, display:"< 1K"},
+    {x:0.775, value:10000, display:"< 10K"},
+    {x:0.875, value:100000, display:"< 100K"},
+    {x:1, value:1000000, display:"< 1M"},
 
   ]
   
   let bins = []
 
-  for (let t = 0; t < 50; t++) {
+  // for (let t = 0; t < 50; t++) {
 
-    bins.push({value:t, width:0.01})
+  //   bins.push({value:t, width:0.01})
 
-  }
+  // }
 
-  for (let t = 51; t < 100; t++) {
+  // for (let t = 51; t < 100; t++) {
 
-    bins.push({value:t, width:0.01})
+  //   bins.push({value:t, width:0.01})
 
-  }
+  // }
 
   // for (let t = 200; t < 500; t++) {
 
@@ -964,17 +1007,17 @@ function updateStats() {
 
   // }
 
-  // for (let t = 0; t < ticks.length; t++) {
+  for (let t = 0; t < ticks.length; t++) {
     
-  //   bins.push({value:ticks[t].value, width:undefined})
+    bins.push({value:ticks[t].value, width:undefined})
 
-  //   if (t == 0) {
-  //     bins[t].width = ticks[t].x
-  //   } else {
-  //     bins[t].width = ticks[t].x-ticks[t-1].x
-  //   }
+    if (t == 0) {
+      bins[t].width = ticks[t].x
+    } else {
+      bins[t].width = ticks[t].x-ticks[t-1].x
+    }
 
-  // }
+  }
 
   console.log(bins)
 
@@ -988,7 +1031,7 @@ function updateStats() {
   // }
 
 
-  $("#histogram-container").append(createHistogram(globalInfo, bins, ticks, 0.2))
+  $("#histogram-container").append(createHistogram(globalInfo, bins, ticks, getStat("best_today")))
 
 
 
