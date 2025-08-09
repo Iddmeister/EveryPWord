@@ -1106,32 +1106,53 @@ function createWavyElement(text, delay) {
 }
 
 
-const socketURL = "ws://localhost:6321"
-var socket = new WebSocket(socketURL)
+const socketURL = `wss://${location.host}/ws/`
+
+var socket = null
+
+try {
+
+  socket = new WebSocket(socketURL)
 
 
-socket.onopen = () => {
-  console.log("Connected to Server")
-}
-
-socket.onmessage = (event) => {
-
-  let data = JSON.parse(event.data)
-
-  switch(data.type) {
-
-    case "histogram":
-      currentHistogram = data.histogram
-      updateHistogram()
-      break;
-
+  socket.onopen = () => {
+    console.log("Connected to Server")
+  }
+  
+  socket.onmessage = (event) => {
+  
+    let data = JSON.parse(event.data)
+  
+    switch(data.type) {
+  
+      case "histogram":
+        currentHistogram = data.histogram
+        updateHistogram()
+        break;
+  
+    }
+  
   }
 
+
+} catch {
+  console.log("Failed to connect to server")
 }
 
 function sendScore(score) {
-  socket.send(JSON.stringify({request:"score", score:score, name:username}))
-  socket.send(JSON.stringify({request:"histogram"}))
+
+  try {
+
+    if (socket) {
+      socket.send(JSON.stringify({request:"score", score:score, name:username}))
+      socket.send(JSON.stringify({request:"histogram"}))
+    }
+
+  } catch {
+    console.log("Failed to send score")
+  }
+
+
 
 }
 

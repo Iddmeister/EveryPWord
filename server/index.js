@@ -1,3 +1,5 @@
+const http = require("http")
+
 const ws = require("ws");
 
 var currentDate = (new Date()).toDateString()
@@ -50,12 +52,16 @@ var currentScores = {}
 
 var currentHistogram = calculateHistogram()
 
-const server = new ws.WebSocketServer({port:6321})
+
+const server = http.createServer()
+
+
+const socket = new ws.WebSocketServer({server})
 
 // ws.on('error', console.error);
 
 
-server.on("connection", (client) => {
+socket.on("connection", (client) => {
     console.log("client connected")
 
     sendHistogram(client)
@@ -168,3 +174,5 @@ function calculateHistogram() {
 
   
   }
+
+server.listen(4003, "0.0.0.0")
