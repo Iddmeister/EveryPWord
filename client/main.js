@@ -27,7 +27,7 @@ const pluralPenalty = 30
 
 var username = null
 
-const debug = true
+const debug = false
 
 const offsetFromDate = new Date("16 June 2025")
 
